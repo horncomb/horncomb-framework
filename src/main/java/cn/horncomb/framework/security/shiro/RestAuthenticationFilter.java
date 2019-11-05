@@ -59,10 +59,10 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
         return createToken(username, password, rememberMe, host);
     }
 
-    protected HashMap<String, String> parseLoginFormParams(ServletRequest request) {
+    protected <T> T parseLoginFormParams(ServletRequest request) {
         try {
             String reqBody = StreamUtils.copyToString(request.getInputStream(), Charset.forName(request.getCharacterEncoding()));
-            return JSONObject.parseObject(reqBody, HashMap.class);
+            return (T)JSONObject.parseObject(reqBody, HashMap.class);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
