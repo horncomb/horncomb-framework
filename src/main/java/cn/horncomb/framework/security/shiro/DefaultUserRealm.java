@@ -5,8 +5,10 @@ import cn.horncomb.framework.security.AccountRepository;
 import cn.horncomb.framework.security.OnlineUser;
 import cn.horncomb.framework.security.OnlineUserBuilder;
 import cn.horncomb.framework.spring.boot.HorncombProperties;
+import cn.horncomb.framework.web.rest.errors.CustomParameterizedException;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.crypto.hash.Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -41,13 +43,14 @@ public class DefaultUserRealm extends AuthorizingRealm {
     }
 
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws CustomParameterizedException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         Assert.hasText(upToken.getUsername(), "Null usernames are not allowed by this realm.");
         Account account = this.accountRepository.findByAnyIdentifier(upToken.getUsername());
         if (account == null) // 账号不存在
             throw new UnknownAccountException("Account not found :" + upToken.getUsername());
         String encodedPassword = this.accountRepository.getEncodedPasswordById(account.getId());
+
         OnlineUser user = this.userBuilder.build(account, upToken.isRememberMe(), null);
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, encodedPassword, getName());
 
