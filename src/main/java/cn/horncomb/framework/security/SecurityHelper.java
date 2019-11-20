@@ -12,6 +12,6 @@ public class SecurityHelper {
         if (subject != null && subject.isAuthenticated()) {
             return (OnlineUser) subject.getPrincipal();
         }
-        throw new IllegalStateException("Authenticated User not found!");
+        return null;
     }
 }
