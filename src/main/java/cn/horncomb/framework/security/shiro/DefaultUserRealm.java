@@ -8,7 +8,6 @@ import cn.horncomb.framework.spring.boot.HorncombProperties;
 import cn.horncomb.framework.web.rest.errors.CustomParameterizedException;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.crypto.hash.Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;

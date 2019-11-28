@@ -18,6 +18,4 @@ public interface AccountRepository {
      * @return 经过编码的账号密码.
      */
     String getEncodedPasswordById(@NotNull Object userId);
-
-    int insert(@NotNull Account account);
 }
