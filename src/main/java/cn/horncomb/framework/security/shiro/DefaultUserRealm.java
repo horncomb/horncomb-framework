@@ -59,12 +59,15 @@ public class DefaultUserRealm extends AuthorizingRealm {
         Set<String> roles = null;
         //loginType: ‘0’:用户端登录, ‘1’:机构端登录
         if("1".equals(upToken.getLoginType())){
-            Role role= roleRepository.getById((Long)account.getId());
-            if(StringUtils.isEmpty(role)){
+            Role[] roleArr = roleRepository.getById((Long)account.getId());
+            if(roleArr==null||roleArr.length==0){
                 throw new IllegalStateException("当前登录账号不是工作人员账号");
             }else{
                 roles = new HashSet<>();
-                roles.add(""+role.getId());
+                for(int i=0;i<roleArr.length;i++){
+                    Role role = (Role) roleArr[i];
+                    roles.add(""+role.getId());
+                }
             }
         }
 
