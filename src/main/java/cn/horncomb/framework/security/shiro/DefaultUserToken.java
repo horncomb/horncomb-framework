@@ -12,13 +12,15 @@ public class DefaultUserToken implements AuthenticationToken {
     private boolean rememberMe;
     private String host;
     private String loginType;
+    private String unionId;
 
-    public DefaultUserToken(String username, String password, boolean rememberMe, String host, String loginType) {
+    public DefaultUserToken(String username, String password, boolean rememberMe, String host, String loginType,String unionId) {
         this.username = username;
         this.password = password;
         this.rememberMe = rememberMe;
         this.host = host;
         this.loginType = loginType;
+        this.unionId = unionId;
     }
 
     @Override

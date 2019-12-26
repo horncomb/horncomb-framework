@@ -18,4 +18,11 @@ public interface AccountRepository {
      * @return 经过编码的账号密码.
      */
     String getEncodedPasswordById(@NotNull Object userId);
+
+    /**
+     * 更新unionid
+     * @param unionid
+     * @return
+     */
+    int updateUnionidById(String unionid,Object userId);
 }
