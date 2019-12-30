@@ -20,9 +20,9 @@ public interface AccountRepository {
     String getEncodedPasswordById(@NotNull Object userId);
 
     /**
-     * 更新unionid
-     * @param unionid
+     * 更新unionId
+     * @param unionId
      * @return
      */
-    int updateUnionidById(String unionid,Object userId);
+    int updateUnionidById(String unionId,Object userId);
 }
