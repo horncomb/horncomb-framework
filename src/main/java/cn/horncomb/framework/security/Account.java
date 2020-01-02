@@ -6,4 +6,5 @@ public interface Account extends Serializable {
     Object getId();
     String getName();
     String getUnionId();
+    String getNickname();
 }

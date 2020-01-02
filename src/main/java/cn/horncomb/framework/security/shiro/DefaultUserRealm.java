@@ -55,9 +55,9 @@ public class DefaultUserRealm extends AuthorizingRealm {
         Account account = this.accountRepository.findByAnyIdentifier(upToken.getUsername());
         if (account == null) // 账号不存在
             throw new UnknownAccountException("Account not found :" + upToken.getUsername());
-        if(!StringUtils.isEmpty(upToken.getUnionId())
-                &&StringUtils.isEmpty(account.getUnionId())){
-            accountRepository.updateUnionidById(upToken.getUnionId(),account.getId());
+        if((!StringUtils.isEmpty(upToken.getUnionId())&&StringUtils.isEmpty(account.getUnionId()))
+            ||(!upToken.getNickname().equals(account.getNickname()))){
+            accountRepository.updateAccountById(upToken.getNickname(),upToken.getUnionId(),account.getId());
         }
         Set<String> roles = null;
         //loginType: ‘0’:用户端登录, ‘1’:机构端登录
