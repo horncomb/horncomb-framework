@@ -17,6 +17,7 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.zalando.problem.spring.common.HttpStatusAdapter;
 
@@ -46,6 +47,18 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
         this.loginResultProvider = loginResultProvider;
         this.exceptionTranslator = exceptionTranslator;
         this.httpMessageConverters = httpMessageConverters;
+    }
+    /**
+     * 在访问过来的时候检测是否为OPTIONS请求，如果是就直接返回true
+     */
+    @Override
+    protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        if (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
+            prepareResponse(HttpStatus.OK,request,response);
+            return true;
+        }
+        return super.preHandle(request,response);
     }
 
     @Override
@@ -145,6 +158,16 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
     private HttpServletResponse prepareResponse(HttpStatus httpStatus, ServletRequest request, ServletResponse
             response) {
         HttpServletResponse resp = (HttpServletResponse) response;
+        HttpServletRequest requ = (HttpServletRequest) request;
+        //跨域的header设置
+        resp.setHeader("Access-control-Allow-Origin", requ.getHeader("Origin"));
+        resp.setHeader("Access-Control-Allow-Methods", requ.getMethod());
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", requ.getHeader("Access-Control-Request-Headers"));
+        resp.setHeader("Access-Control-Expose-Headers","Authorization");
+        //防止乱码，适用于传输JSON数据
+        resp.setHeader("Content-Type","application/json;charset=UTF-8");
         resp.setCharacterEncoding(request.getCharacterEncoding());
         resp.setStatus(httpStatus.value());
 //        resp.setContentType(request.getContentType());
