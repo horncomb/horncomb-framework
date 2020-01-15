@@ -64,10 +64,10 @@ public class DefaultUserRealm extends AuthorizingRealm {
         }
         //查询和更新微信关联信息
         WxUnion wxUnion = wxUnionRepository.selectWxUnionByOpenId(upToken.getOpenId());
-        if(wxUnion!=null&&!StringUtils.isEmpty(upToken.getUnionId())
-                &&!upToken.getUnionId().equals(wxUnion.getUnionId())){
+        if(StringUtils.isEmpty(wxUnion.getUnionId())||StringUtils.isEmpty(wxUnion.getUserId())){
             wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),upToken.getRefreshToken(),upToken.getOpenId());
         }
+
 
         Set<String> roles = null;
         //loginType: ‘0’:用户端登录, ‘1’:机构端登录
