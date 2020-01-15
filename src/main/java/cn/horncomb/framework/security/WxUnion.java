@@ -2,10 +2,9 @@ package cn.horncomb.framework.security;
 
 import java.io.Serializable;
 
-public interface Account extends Serializable {
-    Object getId();
-    String getName();
-    String getNickname();
+public interface WxUnion extends Serializable {
     String getOpenId();
     String getUnionId();
+    String getUnionType();
+    String getRefreshToken();
 }

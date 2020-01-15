@@ -20,11 +20,10 @@ public interface AccountRepository {
     String getEncodedPasswordById(@NotNull Object userId);
 
     /**
-     * 更新unionId和微信名称
+     * 更新微信名称
      * @param nickname
-     * @param unionId
      * @param userId
      * @return
      */
-    int updateAccountById(String nickname,String unionId,Object userId);
+    int updateAccountById(String nickname,Object userId);
 }

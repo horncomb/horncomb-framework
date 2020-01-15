@@ -28,6 +28,8 @@ public class DefaultUserRealm extends AuthorizingRealm {
 
     private RoleRepository roleRepository;
 
+    private WxUnionRepository wxUnionRepository;
+
     private OnlineUserBuilder userBuilder;
 
     @Override
@@ -36,11 +38,13 @@ public class DefaultUserRealm extends AuthorizingRealm {
     }
 
     public DefaultUserRealm(HorncombProperties horncombProperties, AccountRepository accountRepository,
-                            RoleRepository roleRepository,OnlineUserBuilder userBuilder) {
+                            RoleRepository roleRepository,WxUnionRepository wxUnionRepository,
+                            OnlineUserBuilder userBuilder) {
         this.horncombProperties = horncombProperties;
         this.accountRepository = accountRepository;
         this.userBuilder = userBuilder;
         this.roleRepository = roleRepository;
+        this.wxUnionRepository = wxUnionRepository;
     }
 
     @Override
@@ -55,10 +59,17 @@ public class DefaultUserRealm extends AuthorizingRealm {
         Account account = this.accountRepository.findByAnyIdentifier(upToken.getUsername());
         if (account == null) // 账号不存在
             throw new UnknownAccountException("Account not found :" + upToken.getUsername());
-        if((!StringUtils.isEmpty(upToken.getUnionId())&&StringUtils.isEmpty(account.getUnionId()))
-            ||(!StringUtils.isEmpty(upToken.getNickname())&&!upToken.getNickname().equals(account.getNickname()))){
-            accountRepository.updateAccountById(upToken.getNickname(),upToken.getUnionId(),account.getId());
+        if(!StringUtils.isEmpty(upToken.getNickname())&&!upToken.getNickname().equals(account.getNickname())){
+            accountRepository.updateAccountById(upToken.getNickname(),account.getId());
         }
+        //查询和更新微信关联信息
+        WxUnion wxUnion = wxUnionRepository.selectWxUnionByOpenId(upToken.getOpenId());
+        if((!StringUtils.isEmpty(upToken.getUnionId())&&StringUtils.isEmpty(wxUnion.getUnionId()))
+            ||(!StringUtils.isEmpty(upToken.getRefreshToken())
+                &&!upToken.getRefreshToken().equals(wxUnion.getRefreshToken()))){
+            wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),upToken.getRefreshToken(),upToken.getOpenId());
+        }
+
         Set<String> roles = null;
         //loginType: ‘0’:用户端登录, ‘1’:机构端登录
         if("1".equals(upToken.getLoginType())){
@@ -87,6 +98,8 @@ public class DefaultUserRealm extends AuthorizingRealm {
             ByteSource saltObj = ByteSource.Util.bytes(salt); // 对盐编码
             info.setCredentialsSalt(saltObj);
         }
+
+
         return info;
     }
 }
