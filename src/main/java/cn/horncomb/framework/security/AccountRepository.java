@@ -21,9 +21,10 @@ public interface AccountRepository {
 
     /**
      * 更新微信名称
+     * @param unionId
      * @param nickname
      * @param userId
      * @return
      */
-    int updateAccountById(String nickname,Object userId);
+    int updateAccountById(String unionId,String nickname,Object userId);
 }

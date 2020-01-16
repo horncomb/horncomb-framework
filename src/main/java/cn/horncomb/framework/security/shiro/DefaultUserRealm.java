@@ -57,14 +57,18 @@ public class DefaultUserRealm extends AuthorizingRealm {
         DefaultUserToken upToken = (DefaultUserToken) token;
         Assert.hasText(upToken.getUsername(), "Null usernames are not allowed by this realm.");
         Account account = this.accountRepository.findByAnyIdentifier(upToken.getUsername());
-        if (account == null) // 账号不存在
+        if (account == null){
+            // 账号不存在
             throw new UnknownAccountException("Account not found :" + upToken.getUsername());
-        if(!StringUtils.isEmpty(upToken.getNickname())&&!upToken.getNickname().equals(account.getNickname())){
-            accountRepository.updateAccountById(upToken.getNickname(),account.getId());
+        }
+        //更新unionId和微信昵称
+        if((!StringUtils.isEmpty(upToken.getUnionId())&&StringUtils.isEmpty(account.getUnionId()))||
+                (!StringUtils.isEmpty(upToken.getNickname())&&!upToken.getNickname().equals(account.getNickname()))){
+            accountRepository.updateAccountById(upToken.getUnionId(),upToken.getNickname(),account.getId());
         }
         //查询和更新微信关联信息
         WxUnion wxUnion = wxUnionRepository.selectWxUnionByOpenId(upToken.getOpenId());
-        if(StringUtils.isEmpty(wxUnion.getUnionId())||StringUtils.isEmpty(wxUnion.getUserId())){
+        if(!StringUtils.isEmpty(upToken.getUnionId())&&StringUtils.isEmpty(wxUnion.getUnionId())){
             wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),upToken.getRefreshToken(),upToken.getOpenId());
         }
 
