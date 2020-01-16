@@ -74,17 +74,31 @@ public class DefaultUserRealm extends AuthorizingRealm {
 
 
         Set<String> roles = null;
-        //loginType: ‘0’:用户端登录, ‘1’:机构端登录
-        if("1".equals(upToken.getLoginType())){
+        //loginType: ‘0’:用户端登录, ‘1’:机构端登录，‘2’：管理平台登录
+        if("1".equals(upToken.getLoginType())||"2".equals(upToken.getLoginType())){
+            //机构端登录权限：机构用户，管理平台登录权限：管理员
             Role[] roleArr = roleRepository.getById((Long)account.getId());
-            if(roleArr==null||roleArr.length==0){
-                throw new IllegalStateException("当前登录账号不是工作人员账号");
-            }else{
+            boolean loginFlag = false;
+            if(roleArr!=null&&roleArr.length>0){
+                if("1".equals(upToken.getLoginType())){
+                    loginFlag = true;
+                }else{
+                    for(Role role : roleArr){
+                        if("管理员".equals(role.getName())){
+                            loginFlag = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(loginFlag){
                 roles = new HashSet<>();
                 for(int i=0;i<roleArr.length;i++){
                     Role role = (Role) roleArr[i];
                     roles.add(""+role.getId());
                 }
+            }else{
+                throw new IllegalStateException("当前登录账号不是管理员账号，无法登录！");
             }
         }
 
@@ -101,7 +115,6 @@ public class DefaultUserRealm extends AuthorizingRealm {
             ByteSource saltObj = ByteSource.Util.bytes(salt); // 对盐编码
             info.setCredentialsSalt(saltObj);
         }
-
 
         return info;
     }
