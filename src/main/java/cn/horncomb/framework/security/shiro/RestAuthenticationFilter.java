@@ -6,6 +6,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 
 public class RestAuthenticationFilter extends FormAuthenticationFilter {
-    final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FormAuthenticationFilter.class);
+    private final Logger log = LoggerFactory.getLogger(RestAuthenticationFilter.class);
 
     private HttpStatus loginFaildHttpStatus = HttpStatus.UNAUTHORIZED;
     private HttpStatus loginSuccessHttpStatus = HttpStatus.OK;
@@ -164,9 +166,9 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
             response) {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpServletRequest requ = (HttpServletRequest) request;
-        logger.info("origin[{}]",requ.getHeader("Origin"));
+        log.info("frameworkOrigin[{}]",requ.getHeader("Origin"));
         //跨域的header设置
-        resp.setHeader("Access-control-Allow-Origin", "https://admin.xiaolujk.cn");
+        resp.setHeader("Access-control-Allow-Origin", requ.getHeader("Origin"));
         resp.setHeader("Access-Control-Allow-Methods", requ.getMethod());
         resp.setHeader("Access-Control-Allow-Credentials", "true");
         resp.setHeader("Access-Control-Max-Age", "3600");
