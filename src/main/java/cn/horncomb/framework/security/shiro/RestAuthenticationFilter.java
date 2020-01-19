@@ -30,6 +30,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 
 public class RestAuthenticationFilter extends FormAuthenticationFilter {
+    final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(FormAuthenticationFilter.class);
 
     private HttpStatus loginFaildHttpStatus = HttpStatus.UNAUTHORIZED;
     private HttpStatus loginSuccessHttpStatus = HttpStatus.OK;
@@ -163,8 +164,9 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
             response) {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpServletRequest requ = (HttpServletRequest) request;
+        logger.info("origin[{}]",requ.getHeader("Origin"));
         //跨域的header设置
-        resp.setHeader("Access-control-Allow-Origin", requ.getHeader("Origin"));
+        resp.setHeader("Access-control-Allow-Origin", "https://admin.xiaolujk.cn");
         resp.setHeader("Access-Control-Allow-Methods", requ.getMethod());
         resp.setHeader("Access-Control-Allow-Credentials", "true");
         resp.setHeader("Access-Control-Max-Age", "3600");
