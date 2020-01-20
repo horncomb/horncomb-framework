@@ -93,7 +93,8 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        return !isLoginRequest(request, response) && getSubject(request, response).isAuthenticated();
+        boolean accessFlag = !isLoginRequest(request, response) && getSubject(request, response).isAuthenticated();
+        return accessFlag;
     }
 
     @Override
@@ -166,7 +167,6 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
             response) {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpServletRequest requ = (HttpServletRequest) request;
-        log.info("frameworkOrigin[{}]",requ.getHeader("Origin"));
         //跨域的header设置
         resp.setHeader("Access-control-Allow-Origin", requ.getHeader("Origin"));
         resp.setHeader("Access-Control-Allow-Methods", requ.getMethod());
