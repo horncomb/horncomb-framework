@@ -76,10 +76,11 @@ public class RestAuthenticationFilter extends FormAuthenticationFilter {
         String nickname = loginReqParams.get("nickName");
         String unionType = loginReqParams.get("unionType");
         String refreshToken = loginReqParams.get("refreshToken");
+        String appId = loginReqParams.get("appid");
         Boolean rememberMe = rememberMeStr == null ? false : Boolean.valueOf(rememberMeStr);
         String host = getHost(request);
         return new DefaultUserToken(username, password, rememberMe, host,
-                loginType,openId,unionId,nickname,unionType,refreshToken);
+                loginType,openId,unionId,nickname,unionType,refreshToken,appId);
     }
 
     protected <T> T parseLoginFormParams(ServletRequest request) {

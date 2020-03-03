@@ -15,6 +15,7 @@ public class DefaultUserToken implements AuthenticationToken {
     private String unionId;
     private String nickname;
     private String openId;
+
     /**
      * 类型 mp：公众号，miniapp：小程序
      */
@@ -23,10 +24,11 @@ public class DefaultUserToken implements AuthenticationToken {
      * 公众号token，有效期30天
      */
     private String RefreshToken;
+    private String appId;
 
     public DefaultUserToken(String username, String password, boolean rememberMe, String host,
                             String loginType,String openId,String unionId,String nickname,
-                            String unionType,String refreshToken) {
+                            String unionType,String refreshToken,String appId) {
         this.username = username;
         this.password = password;
         this.rememberMe = rememberMe;
@@ -37,6 +39,7 @@ public class DefaultUserToken implements AuthenticationToken {
         this.nickname = nickname;
         this.unionType = unionType;
         this.RefreshToken = refreshToken;
+        this.appId = appId;
     }
 
     @Override

@@ -3,6 +3,7 @@ package cn.horncomb.framework.security.shiro;
 import cn.horncomb.framework.security.*;
 import cn.horncomb.framework.spring.boot.HorncombProperties;
 import cn.horncomb.framework.web.rest.errors.CustomParameterizedException;
+import cn.horncomb.framework.web.rest.errors.UnauthorizedAlertException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -28,7 +29,7 @@ public class DefaultUserRealm extends AuthorizingRealm {
 
     private RoleRepository roleRepository;
 
-    private WxUnionRepository wxUnionRepository;
+    private WxUnionService wxUnionRepository;
 
     private OnlineUserBuilder userBuilder;
 
@@ -38,7 +39,7 @@ public class DefaultUserRealm extends AuthorizingRealm {
     }
 
     public DefaultUserRealm(HorncombProperties horncombProperties, AccountRepository accountRepository,
-                            RoleRepository roleRepository,WxUnionRepository wxUnionRepository,
+                            RoleRepository roleRepository, WxUnionService wxUnionRepository,
                             OnlineUserBuilder userBuilder) {
         this.horncombProperties = horncombProperties;
         this.accountRepository = accountRepository;
@@ -69,8 +70,12 @@ public class DefaultUserRealm extends AuthorizingRealm {
         //查询和更新微信关联信息
         WxUnion wxUnion = wxUnionRepository.selectWxUnionByOpenId(upToken.getOpenId());
         if(!StringUtils.isEmpty(upToken.getUnionId())){
-            if(wxUnion!=null&&StringUtils.isEmpty(wxUnion.getUnionId())){
-                wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),upToken.getRefreshToken(),upToken.getOpenId());
+            if(wxUnion!=null){
+                if(StringUtils.isEmpty(wxUnion.getUnionId())){
+                    wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),upToken.getRefreshToken(),upToken.getOpenId());
+                }
+            }else{
+                wxUnionRepository.insertWxUnion(upToken.getUnionId(),upToken.getOpenId(),upToken.getAppId(),upToken.getUnionType());
             }
         }
 
@@ -100,7 +105,7 @@ public class DefaultUserRealm extends AuthorizingRealm {
                     roles.add(""+role.getId());
                 }
             }else{
-                throw new IllegalStateException("当前登录账号不是管理员账号，无法登录！");
+                throw new UnauthorizedAlertException("当前登录账号不是管理员账号，无法登录！");
             }
         }
 
