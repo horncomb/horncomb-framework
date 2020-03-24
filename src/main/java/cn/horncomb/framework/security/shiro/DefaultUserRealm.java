@@ -71,11 +71,11 @@ public class DefaultUserRealm extends AuthorizingRealm {
         WxUnion wxUnion = wxUnionRepository.selectWxUnionByOpenId(upToken.getOpenId());
         if(!StringUtils.isEmpty(upToken.getUnionId())){
             if(wxUnion!=null){
-                if(StringUtils.isEmpty(wxUnion.getUnionId())){
-                    wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),upToken.getRefreshToken(),upToken.getOpenId());
+                if(StringUtils.isEmpty(wxUnion.getUnionId())||StringUtils.isEmpty(wxUnion.getUserId())){
+                    wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),Long.valueOf(String.valueOf(account.getId())),upToken.getOpenId());
                 }
             }else{
-                wxUnionRepository.insertWxUnion(upToken.getUnionId(),upToken.getOpenId(),upToken.getAppId(),upToken.getUnionType());
+                wxUnionRepository.insertWxUnion(""+account.getId(),upToken.getUnionId(),upToken.getOpenId(),upToken.getAppId(),upToken.getUnionType());
             }
         }
 

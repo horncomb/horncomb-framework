@@ -6,5 +6,5 @@ public interface WxUnion extends Serializable {
     String getOpenId();
     String getUnionId();
     String getUnionType();
-    String getRefreshToken();
+    Long getUserId();
 }
