@@ -91,7 +91,7 @@ public class DefaultUserRealm extends AuthorizingRealm {
                     loginFlag = true;
                 }else{
                     for(Role role : roleArr){
-                        if("管理员".equals(role.getName())){
+                        if("管理员|医生".contains(role.getName())){
                             loginFlag = true;
                             break;
                         }
