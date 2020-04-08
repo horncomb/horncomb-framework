@@ -27,9 +27,9 @@ public class DefaultUserRealm extends AuthorizingRealm {
 
     private AccountRepository accountRepository;
 
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
-    private WxUnionService wxUnionRepository;
+    private WxUnionService wxUnionService;
 
     private OnlineUserBuilder userBuilder;
 
@@ -39,13 +39,13 @@ public class DefaultUserRealm extends AuthorizingRealm {
     }
 
     public DefaultUserRealm(HorncombProperties horncombProperties, AccountRepository accountRepository,
-                            RoleRepository roleRepository, WxUnionService wxUnionRepository,
+                            RoleService roleService, WxUnionService wxUnionService,
                             OnlineUserBuilder userBuilder) {
         this.horncombProperties = horncombProperties;
         this.accountRepository = accountRepository;
         this.userBuilder = userBuilder;
-        this.roleRepository = roleRepository;
-        this.wxUnionRepository = wxUnionRepository;
+        this.roleService = roleService;
+        this.wxUnionService = wxUnionService;
     }
 
     @Override
@@ -68,23 +68,15 @@ public class DefaultUserRealm extends AuthorizingRealm {
             accountRepository.updateAccountById(upToken.getUnionId(),upToken.getNickname(),account.getId());
         }
         //查询和更新微信关联信息
-        WxUnion wxUnion = wxUnionRepository.selectWxUnionByOpenId(upToken.getOpenId());
-        if(!StringUtils.isEmpty(upToken.getUnionId())){
-            if(wxUnion!=null){
-                if(StringUtils.isEmpty(wxUnion.getUnionId())||StringUtils.isEmpty(wxUnion.getUserId())){
-                    wxUnionRepository.updateWxUnionByOpenId(upToken.getUnionId(),Long.valueOf(String.valueOf(account.getId())),upToken.getOpenId());
-                }
-            }else{
-                wxUnionRepository.insertWxUnion(""+account.getId(),upToken.getUnionId(),upToken.getOpenId(),upToken.getAppId(),upToken.getUnionType());
-            }
-        }
-
+        Long userId = Long.valueOf(String.valueOf(account.getId()));
+        wxUnionService.setWxUnion(userId,upToken.getUnionId(),
+                upToken.getOpenId(),upToken.getAppId(),upToken.getUnionType());
 
         Set<String> roles = null;
         //loginType: ‘0’:用户端登录, ‘1’:机构端登录，‘2’：管理平台登录
         if("1".equals(upToken.getLoginType())||"2".equals(upToken.getLoginType())){
             //机构端登录权限：机构用户，管理平台登录权限：管理员
-            Role[] roleArr = roleRepository.getById((Long)account.getId());
+            Role[] roleArr = roleService.getById((Long)account.getId());
             boolean loginFlag = false;
             if(roleArr!=null&&roleArr.length>0){
                 if("1".equals(upToken.getLoginType())){

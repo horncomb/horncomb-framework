@@ -1,6 +1,6 @@
 package cn.horncomb.framework.security;
 
-public interface RoleRepository {
+public interface RoleService {
 
     Role[] getById(Object userId);
 
