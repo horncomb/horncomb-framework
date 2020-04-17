@@ -62,19 +62,14 @@ public class DefaultUserRealm extends AuthorizingRealm {
             // 账号不存在
             throw new UnknownAccountException("Account not found :" + upToken.getUsername());
         }
-        //更新unionId和微信昵称
-        if((!StringUtils.isEmpty(upToken.getUnionId())&&StringUtils.isEmpty(account.getUnionId()))||
-                (!StringUtils.isEmpty(upToken.getNickname())&&!upToken.getNickname().equals(account.getNickname()))){
-            accountRepository.updateAccountById(upToken.getUnionId(),upToken.getNickname(),account.getId());
-        }
-        //查询和更新微信关联信息
-        Long userId = Long.valueOf(String.valueOf(account.getId()));
-        wxUnionService.setWxUnion(userId,upToken.getUnionId(),
-                upToken.getOpenId(),upToken.getAppId(),upToken.getUnionType());
 
         Set<String> roles = null;
         //loginType: ‘0’:用户端登录, ‘1’:机构端登录，‘2’：管理平台登录
-        if("1".equals(upToken.getLoginType())||"2".equals(upToken.getLoginType())){
+        if("0".equals(upToken.getLoginType())){
+            //用户端登录：刷新用户和微信数据
+            wxUnionService.refreshAccountAndWxInfo(account,upToken);
+
+        }else if("1".equals(upToken.getLoginType())||"2".equals(upToken.getLoginType())){
             //机构端和管理平台登录权限：机构用户
             Role[] roleArr = roleService.getById((Long)account.getId());
             boolean loginFlag = false;
@@ -88,7 +83,7 @@ public class DefaultUserRealm extends AuthorizingRealm {
                     roles.add(""+role.getId());
                 }
             }else{
-                throw new UnauthorizedAlertException("当前登录账号不是管理员账号，无法登录！");
+                throw new UnauthorizedAlertException("当前登录账号不是机构人员账号，无法登录！");
             }
         }
 

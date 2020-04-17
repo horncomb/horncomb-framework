@@ -18,13 +18,4 @@ public interface AccountRepository {
      * @return 经过编码的账号密码.
      */
     String getEncodedPasswordById(@NotNull Object userId);
-
-    /**
-     * 更新微信名称
-     * @param unionId
-     * @param nickname
-     * @param userId
-     * @return
-     */
-    int updateAccountById(String unionId,String nickname,Object userId);
 }

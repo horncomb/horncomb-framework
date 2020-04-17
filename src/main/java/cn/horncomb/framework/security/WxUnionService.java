@@ -1,6 +1,8 @@
 package cn.horncomb.framework.security;
 
+import cn.horncomb.framework.security.shiro.DefaultUserToken;
+
 public interface WxUnionService {
 
-    public void setWxUnion(Long userId,String unionId,String openId,String appId,String unionType);
+    public void refreshAccountAndWxInfo(Account account, DefaultUserToken upToken);
 }

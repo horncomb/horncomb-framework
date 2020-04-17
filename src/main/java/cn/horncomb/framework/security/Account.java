@@ -5,7 +5,4 @@ import java.io.Serializable;
 public interface Account extends Serializable {
     Object getId();
     String getName();
-    String getNickname();
-    String getOpenId();
-    String getUnionId();
 }
