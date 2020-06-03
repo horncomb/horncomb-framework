@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DataScopeEnum {
     /* 全部的数据权限 */
-    ALL("ALL", "全部的数据权限1"),
+    ALL("ALL", "全部的数据权限"),
 
     /* 自己部门的数据权限 */
     SELF("SELF", "自己部门的数据权限"),
