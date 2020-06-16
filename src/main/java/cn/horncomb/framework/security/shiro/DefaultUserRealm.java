@@ -71,7 +71,7 @@ public class DefaultUserRealm extends AuthorizingRealm {
 
         }else if("1".equals(upToken.getLoginType())||"2".equals(upToken.getLoginType())){
             //机构端和管理平台登录权限：机构用户
-            Role[] roleArr = roleService.getById((Long)account.getId());
+            Role[] roleArr = roleService.getRolesByUserId((Long)account.getId());
             boolean loginFlag = false;
             if(roleArr!=null&&roleArr.length>0){
                 loginFlag = true;
