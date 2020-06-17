@@ -65,11 +65,7 @@ public class DefaultUserRealm extends AuthorizingRealm {
 
         Set<String> roles = null;
         //loginType: ‘0’:用户端登录, ‘1’:机构端登录，‘2’：管理平台登录
-        if("0".equals(upToken.getLoginType())){
-            //用户端登录：刷新用户和微信数据
-            wxUnionService.refreshAccountAndWxInfo(account,upToken);
-
-        }else if("1".equals(upToken.getLoginType())||"2".equals(upToken.getLoginType())){
+        if("1".equals(upToken.getLoginType())||"2".equals(upToken.getLoginType())){
             //机构端和管理平台登录权限：机构用户
             Role[] roleArr = roleService.getRolesByUserId((Long)account.getId());
             boolean loginFlag = false;
@@ -86,6 +82,8 @@ public class DefaultUserRealm extends AuthorizingRealm {
                 throw new UnauthorizedAlertException("当前登录账号不是机构人员账号，无法登录！");
             }
         }
+        //刷新用户和微信数据
+        wxUnionService.refreshAccountAndWxInfo(account,upToken);
 
         String encodedPassword = this.accountRepository.getEncodedPasswordById(account.getId());
         OnlineUser user = this.userBuilder.build(account, upToken.isRememberMe(), roles);

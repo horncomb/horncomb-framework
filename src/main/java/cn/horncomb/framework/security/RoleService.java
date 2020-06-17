@@ -3,7 +3,6 @@ package cn.horncomb.framework.security;
 import java.util.List;
 
 public interface RoleService {
-
     /**
      * 取得用户角色
      * @param userId

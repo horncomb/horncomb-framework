@@ -13,6 +13,7 @@ public class DefaultUserToken implements AuthenticationToken {
     private String host;
     private String loginType;
     private String unionId;
+    private String avatar;
     private String nickname;
     private String openId;
 
@@ -27,7 +28,7 @@ public class DefaultUserToken implements AuthenticationToken {
     private String appId;
 
     public DefaultUserToken(String username, String password, boolean rememberMe, String host,
-                            String loginType,String openId,String unionId,String nickname,
+                            String loginType,String openId,String unionId,String avatar,String nickname,
                             String unionType,String refreshToken,String appId) {
         this.username = username;
         this.password = password;
@@ -36,6 +37,7 @@ public class DefaultUserToken implements AuthenticationToken {
         this.loginType = loginType;
         this.openId = openId;
         this.unionId = unionId;
+        this.avatar = avatar;
         this.nickname = nickname;
         this.unionType = unionType;
         this.RefreshToken = refreshToken;
