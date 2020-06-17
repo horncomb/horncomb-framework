@@ -1,7 +1,12 @@
 package cn.horncomb.framework.security;
 
+import java.util.List;
+
 public interface RoleService {
 
-    Role[] getById(Object userId);
+    Role[] getRolesByUserId(Object userId);
 
+    List<String> getPermesByUserId(Object userId);
+
+    List<String> getDataScopesByUserId(Object userId);
 }
