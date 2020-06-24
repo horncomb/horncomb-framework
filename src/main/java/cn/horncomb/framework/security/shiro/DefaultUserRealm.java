@@ -89,9 +89,10 @@ public class DefaultUserRealm extends AuthorizingRealm {
             }else{
                 throw new UnauthorizedAlertException("当前登录账号不是机构人员账号，无法登录！");
             }
+        }else {
+            //刷新用户和微信数据
+            wxUnionService.refreshAccountAndWxInfo(account, upToken);
         }
-        //刷新用户和微信数据
-        wxUnionService.refreshAccountAndWxInfo(account,upToken);
 
         String encodedPassword = this.accountRepository.getEncodedPasswordById(account.getId());
         OnlineUser user = this.userBuilder.build(account, upToken.isRememberMe(), roles, permess, dataScopes);
