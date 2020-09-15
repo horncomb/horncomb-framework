@@ -90,7 +90,7 @@
         <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
 
         <!-- DAO -->
-        <mybatis-plus.version>3.1.1</mybatis-plus.version>
+        <mybatis-plus.version>3.3.2</mybatis-plus.version>
 
         <!-- Web -->
         <servlet.version>3.1.0</servlet.version>

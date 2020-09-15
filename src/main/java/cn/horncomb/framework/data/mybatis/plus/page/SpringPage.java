@@ -1,6 +1,7 @@
 package cn.horncomb.framework.data.mybatis.plus.page;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -107,6 +108,11 @@ public class SpringPage<T> extends PageRequest implements IPage<T> {
     @Override
     public String[] ascs() {
         throw new IllegalStateException("This method is not used!");
+    }
+
+    @Override
+    public List<OrderItem> orders() {
+        return null;
     }
 
     @Override

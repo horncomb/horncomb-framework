@@ -44,7 +44,7 @@ public class JwtRealm extends AuthorizingRealm {
         String accountId = this.jwtTokenProvider.resolveAuthenticationSubject(jwtToken.getToken());
         Account account = this.accountRepository.getById(accountId);
         if (account == null) throw new UnknownAccountException();
-        OnlineUser user = this.userBuilder.build(account, false, null);
+        OnlineUser user = this.userBuilder.build(account, false, null, null, null);
         return new SimpleAccount(user, jwtToken.getToken(), getName());
     }
 

@@ -3,6 +3,7 @@ package cn.horncomb.framework.security;
 import java.io.Serializable;
 
 public interface OnlineUser extends Serializable {
+    String getId();
     String getName();
 
     boolean isRememberMe();
@@ -10,4 +11,8 @@ public interface OnlineUser extends Serializable {
     Account getAccount();
 
     java.util.Set<String> getRoles();
+
+    java.util.List<String> getPermess();
+
+    java.util.List<String> getDataScopes();
 }
