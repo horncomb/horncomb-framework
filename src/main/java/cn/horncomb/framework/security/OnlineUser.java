@@ -12,7 +12,7 @@ public interface OnlineUser extends Serializable {
 
     java.util.Set<String> getRoles();
 
-    java.util.List<String> getPermess();
+    java.util.Set<String> getAuthorities();
 
-    java.util.List<String> getDataScopes();
+    java.util.Set<String> getDataScopes();
 }
